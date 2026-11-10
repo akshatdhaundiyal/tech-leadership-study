@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: draws-diagrams-on-request
+expected_outcome: |
+  The user explicitly asks for the architecture to be drawn, so the agent does
+  it without asking first: an as-is and a to-be box diagram in its reply
+  (components marked new / changed, sync vs async hops distinguishable) and a
+  design folder with the brief, as-is.mmd, to-be.mmd and a filled-in
+  architecture.html. The diagrams name the real components from server.js.
+context:
+  scaffold_script: place-files.sh

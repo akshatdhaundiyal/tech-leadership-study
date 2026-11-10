@@ -1,0 +1,19 @@
+sequenceDiagram
+  autonumber
+  participant M as Manager (SPA)
+  participant A as Django API
+  participant DB as Postgres
+  participant R as Redis
+  participant T as notify task
+  participant G as SSE gateway
+  participant E as Employee (SPA)
+  M->>A: POST /leave/{id}/approve
+  A->>DB: update leave + commit
+  A--)R: on_commit: enqueue notify(event_id)
+  A-->>M: 200
+  R--)T: deliver (at-least-once)
+  T->>DB: INSERT notifications ON CONFLICT (event_id, user_id) DO NOTHING
+  T--)R: PUBLISH user:{id} {unread}
+  R--)G: message
+  G-->>E: SSE event: unread=3
+  T--)R: enqueue send_email(event_id, user_id)

@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: skips-brief-for-typo-fix
+expected_outcome: |
+  The button label is changed from "Sumbit" to "Save" and nothing else in the
+  file changes. The response is short: no design brief, no estimates table, no
+  pattern discussion. At most a one-line note if a real hidden risk exists.
+context:
+  scaffold_script: place-files.sh

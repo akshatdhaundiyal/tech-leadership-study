@@ -1,0 +1,11 @@
+---
+description: Run a system-design pass (scope, load estimates, as-is vs to-be, pattern trade-offs, design brief) before building a feature with its own data flow. Apply when a task adds a service, an endpoint with storage, an integration, real-time delivery, a pipeline or a data-model change, or the user asks how to design, scale or diagram something.
+globs:
+alwaysApply: false
+---
+
+Read `.cursor/skills/system-design-first/SKILL.md` (or wherever this
+repository is installed) and follow it before writing code for the task.
+Keep the depth proportional: a one-line fix gets at most a one-sentence check;
+a new feature gets the one-page design brief; a new subsystem gets the brief
+plus deep dives.

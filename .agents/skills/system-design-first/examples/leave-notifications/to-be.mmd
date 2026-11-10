@@ -1,0 +1,27 @@
+flowchart LR
+  classDef new fill:#dcfce7,stroke:#16a34a,color:#14532d
+  classDef changed fill:#fef9c3,stroke:#ca8a04,color:#713f12
+  classDef removed fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-dasharray:4 3
+
+  spa["React SPA<br/>bell + unread badge"]:::changed
+  api["Django API<br/>approve, GET /notifications"]:::changed
+  pg[("Postgres<br/>leave data")]
+  notif[("notifications<br/>1 row per recipient")]:::new
+  broker[["Redis<br/>Celery broker + pub/sub"]]:::changed
+  task["notify task<br/>fan-out up to 2.5k"]:::new
+  email["send_email<br/>idempotency key"]:::changed
+  sse["SSE gateway<br/>ASGI, 1 node, ~2k conns"]:::new
+  smtp(["SMTP provider"])
+
+  spa -->|"POST approve"| api
+  api --> pg
+  api -.->|"on_commit enqueue"| broker
+  broker -.-> task
+  task -->|"bulk insert"| notif
+  task -.->|"publish user:{id}"| broker
+  task -.->|"per recipient"| email
+  email --> smtp
+  broker -.->|subscribe| sse
+  sse -->|"SSE event"| spa
+  spa -->|"GET /notifications"| api
+  api --> notif

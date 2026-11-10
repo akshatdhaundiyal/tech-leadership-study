@@ -1,0 +1,21 @@
+  AS-IS
+  ┌───────────┐  approve  ┌────────────┐  .delay()  ┌───────────────┐
+  │ React SPA │ ────────▶ │ Django API │ ╌╌╌╌╌╌╌╌╌▷ │ Celery: email │
+  └───────────┘           └────────────┘            └───────────────┘
+   no bell · email is sent even if the transaction rolls back
+
+  TO-BE
+  ┌──────────────┐  approve  ┌──────────────┐ on_commit ┌─────────────────┐
+  │ React SPA ~  │ ────────▶ │ Django API ~ │ ╌╌╌╌╌╌╌╌▷ │ notify task +   │
+  │ bell, unread │           └──────┬───────┘           │ fan-out ×2.5k   │
+  └──────▲───────┘                  │ GET /unread       └──┬──────────┬───┘
+         │                          ▼        bulk insert   │          ╎
+         │                 ┌─────────────────┐             │          ╎ publish
+         │                 │ notifications + │ ◀───────────┘          ╎
+         │                 │ 1 row/recipient │                        ╎
+         │ SSE · 2k tabs   └─────────────────┘                        ╎
+  ┌──────┴───────┐ subscribe ┌─────────────────┐                      ╎
+  │ SSE gateway +│ ◁╌╌╌╌╌╌╌╌ │ Redis pub/sub ~ │ ◁╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+  │ ASGI, 1 node │           │ Celery broker   │
+  └──────────────┘           └─────────────────┘
+  + new  ~ changed  ──▶ sync  ╌╌▷ async

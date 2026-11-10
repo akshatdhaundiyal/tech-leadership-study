@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: brief-for-notification-feature
+expected_outcome: |
+  A one-page design brief (L2) for an in-app + email notification feature on a
+  small HR SaaS. It separates functional from non-functional requirements,
+  derives concrete load numbers from the stated 20k users (and concludes the
+  load is small), reuses the existing Celery/Redis instead of introducing a
+  heavy streaming platform, models per-recipient notification rows with
+  dedup/idempotency, picks a real-time transport for the bell with a reason
+  (polling vs SSE vs WebSocket) and asks the author the questions that change
+  the design (e.g. what "instantly" means) instead of silently deciding.

@@ -1,0 +1,14 @@
+{
+  "name": "baukaalm",
+  "owner": { "name": "Baukaalm", "url": "https://github.com/Baukaalm" },
+  "description": "Skills by Baukaalm",
+  "plugins": [
+    {
+      "name": "system-design-first",
+      "source": "./",
+      "description": "System-design pass before building a feature with its own data flow: scope, load estimates, as-is vs to-be, pattern trade-offs, design brief, optional diagrams.",
+      "category": "productivity",
+      "tags": ["system-design", "architecture", "planning"]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: maps-as-is-before-to-be
+expected_outcome: |
+  An L3 design brief for turning a single-process, in-memory, polling chat
+  backend into a real-time chat for 50k concurrent users. The as-is section
+  names the real endpoints and the in-memory Map from server.js and calls out
+  the single process / in-memory store as the blocker for horizontal scaling
+  and durability. Estimates derive message and fan-out rates from 50k
+  concurrent users. The to-be keeps the lead's WebSocket idea but adds what it
+  needs to work across several nodes (a pub/sub layer, a persistent message
+  store ordered per room, a reconnect/resume cursor), explains each addition
+  with a reason tied to the numbers, and then the first implementation step is
+  actually started (e.g. a message store interface or the WebSocket endpoint).
+context:
+  scaffold_script: place-files.sh

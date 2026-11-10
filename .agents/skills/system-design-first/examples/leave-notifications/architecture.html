@@ -1,0 +1,243 @@
+<!doctype html>
+<!--
+  Template from the system-design-first skill. How to fill the placeholders
+  is described in references/visualization.md (section "architecture.html").
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leave-request notifications · architecture</title>
+<style>
+  :root {
+    --bg: #f8fafc; --panel: #ffffff; --text: #0f172a; --muted: #64748b;
+    --border: #e2e8f0; --accent: #2563eb;
+    --new: #16a34a; --changed: #ca8a04; --removed: #dc2626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1120; --panel: #111827; --text: #e5e7eb; --muted: #94a3b8;
+      --border: #1f2937; --accent: #60a5fa;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  header { max-width: 1200px; margin: 0 auto; padding: 32px 16px 8px; }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .summary { max-width: 72ch; margin: 12px 0 0; }
+  nav {
+    max-width: 1200px; margin: 16px auto 0; padding: 0 16px;
+    display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--border);
+  }
+  nav button {
+    font: inherit; color: var(--muted); background: none; border: 0;
+    padding: 8px 12px; cursor: pointer; border-bottom: 2px solid transparent;
+  }
+  nav button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+  main { max-width: 1200px; margin: 0 auto; padding: 16px; }
+  .view { display: none; }
+  .view.active { display: block; }
+  .split { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  figure {
+    margin: 0; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; overflow-x: auto;
+  }
+  figcaption { font-weight: 600; margin-bottom: 8px; }
+  figure .diagram svg { max-width: 100%; height: auto; }
+  pre.fallback {
+    white-space: pre; overflow-x: auto; font: 13px/1.4 ui-monospace, Menlo, monospace;
+    color: var(--muted); margin: 0;
+  }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 13px; margin-top: 12px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; border: 2px solid; }
+  .legend .n { border-color: var(--new); }
+  .legend .c { border-color: var(--changed); }
+  .legend .r { border-color: var(--removed); border-style: dashed; }
+  .empty { color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Leave-request notifications</h1>
+  <div class="sub">Depth L2 · proposal · 2026-11-05</div>
+  <p class="summary">A notification system on what you already run: a Celery task fans out one row per recipient, Redis pub/sub feeds a small SSE gateway for the bell, emails are idempotent. No Kafka, no new service: 5k events/day and 2k open tabs fit one node.</p>
+</header>
+
+<nav role="tablist" id="tabs"></nav>
+
+<main>
+  <section class="view" data-tab="Compare">
+    <div class="split">
+      <figure><figcaption>As-is</figcaption><div class="diagram" data-src="as-is"></div></figure>
+      <figure><figcaption>To-be</figcaption><div class="diagram" data-src="to-be"></div></figure>
+    </div>
+  </section>
+  <section class="view" data-tab="To-be">
+    <figure><figcaption>To-be</figcaption><div class="diagram" data-src="to-be"></div></figure>
+  </section>
+  <section class="view" data-tab="As-is">
+    <figure><figcaption>As-is</figcaption><div class="diagram" data-src="as-is"></div></figure>
+  </section>
+  <section class="view" data-tab="Flows" id="flows"></section>
+
+  <div class="legend">
+    <span><i class="n"></i>new</span>
+    <span><i class="c"></i>changed</span>
+    <span><i class="r"></i>removed</span>
+    <span>── sync</span>
+    <span>- - async</span>
+  </div>
+</main>
+
+<script type="text/x-mermaid" id="as-is">
+flowchart LR
+  classDef new fill:#dcfce7,stroke:#16a34a,color:#14532d
+  classDef changed fill:#fef9c3,stroke:#ca8a04,color:#713f12
+  classDef removed fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-dasharray:4 3
+
+  spa["React SPA"]
+  api["Django API<br/>leave app"]
+  pg[("Postgres")]
+  broker[["Redis<br/>Celery broker"]]
+  email["Celery task<br/>send_email"]
+  smtp(["SMTP provider"])
+
+  spa -->|"POST /leave/{id}/approve"| api
+  api --> pg
+  api -.->|".delay()"| broker
+  broker -.-> email
+  email --> smtp
+</script>
+
+<script type="text/x-mermaid" id="to-be">
+flowchart LR
+  classDef new fill:#dcfce7,stroke:#16a34a,color:#14532d
+  classDef changed fill:#fef9c3,stroke:#ca8a04,color:#713f12
+  classDef removed fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-dasharray:4 3
+
+  spa["React SPA<br/>bell + unread badge"]:::changed
+  api["Django API<br/>approve, GET /notifications"]:::changed
+  pg[("Postgres<br/>leave data")]
+  notif[("notifications<br/>1 row per recipient")]:::new
+  broker[["Redis<br/>Celery broker + pub/sub"]]:::changed
+  task["notify task<br/>fan-out up to 2.5k"]:::new
+  email["send_email<br/>idempotency key"]:::changed
+  sse["SSE gateway<br/>ASGI, 1 node, ~2k conns"]:::new
+  smtp(["SMTP provider"])
+
+  spa -->|"POST approve"| api
+  api --> pg
+  api -.->|"on_commit enqueue"| broker
+  broker -.-> task
+  task -->|"bulk insert"| notif
+  task -.->|"publish user:{id}"| broker
+  task -.->|"per recipient"| email
+  email --> smtp
+  broker -.->|subscribe| sse
+  sse -->|"SSE event"| spa
+  spa -->|"GET /notifications"| api
+  api --> notif
+</script>
+
+<div id="flow-sources" hidden>
+<script type="text/x-mermaid" data-title="Approve → bell (main flow)">
+sequenceDiagram
+  autonumber
+  participant M as Manager (SPA)
+  participant A as Django API
+  participant DB as Postgres
+  participant R as Redis
+  participant T as notify task
+  participant G as SSE gateway
+  participant E as Employee (SPA)
+  M->>A: POST /leave/{id}/approve
+  A->>DB: update leave + commit
+  A--)R: on_commit: enqueue notify(event_id)
+  A-->>M: 200
+  R--)T: deliver (at-least-once)
+  T->>DB: INSERT notifications ON CONFLICT (event_id, user_id) DO NOTHING
+  T--)R: PUBLISH user:{id} {unread}
+  R--)G: message
+  G-->>E: SSE event: unread=3
+  T--)R: enqueue send_email(event_id, user_id)
+</script>
+</div>
+
+<script type="module">
+  const src = (id) => (document.getElementById(id)?.textContent || "").trim();
+
+  // Flows: one figure per <script type="text/x-mermaid" data-title> block.
+  const flowsView = document.getElementById("flows");
+  const flowScripts = [...document.querySelectorAll('#flow-sources script[type="text/x-mermaid"]')];
+  flowScripts.forEach((s, i) => {
+    s.id = s.id || `flow-${i}`;
+    const fig = document.createElement("figure");
+    fig.style.marginBottom = "16px";
+    fig.innerHTML = `<figcaption></figcaption><div class="diagram" data-src="${s.id}"></div>`;
+    fig.querySelector("figcaption").textContent = s.dataset.title || `Flow ${i + 1}`;
+    flowsView.appendChild(fig);
+  });
+  if (!flowScripts.length) flowsView.remove();
+
+  // Hide as-is views for greenfield features (empty as-is source).
+  if (!src("as-is")) {
+    document.querySelector('[data-tab="Compare"]').remove();
+    document.querySelector('[data-tab="As-is"]').remove();
+  }
+
+  // Tabs.
+  const views = [...document.querySelectorAll(".view")];
+  const tabs = document.getElementById("tabs");
+  const show = (name) => {
+    views.forEach((v) => v.classList.toggle("active", v.dataset.tab === name));
+    [...tabs.children].forEach((b) => b.setAttribute("aria-selected", b.textContent === name));
+    try { localStorage.setItem("sdf-tab", name); } catch {}
+  };
+  views.forEach((v) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.role = "tab"; b.textContent = v.dataset.tab;
+    b.onclick = () => show(v.dataset.tab);
+    tabs.appendChild(b);
+  });
+  let saved = null;
+  try { saved = localStorage.getItem("sdf-tab"); } catch {}
+  show(views.some((v) => v.dataset.tab === saved) ? saved : views[0].dataset.tab);
+
+  // Render. Fallback: show Mermaid source as text (offline, or a syntax error).
+  const fallback = (el, text, err) => {
+    el.innerHTML = "";
+    const pre = document.createElement("pre");
+    pre.className = "fallback";
+    pre.textContent = (err ? `Could not render (${err}). Source:\n\n` : "") + text;
+    el.appendChild(pre);
+  };
+  const targets = [...document.querySelectorAll(".diagram")];
+  targets.forEach((el) => fallback(el, src(el.dataset.src)));
+
+  try {
+    const { default: mermaid } = await import(
+      "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs"
+    );
+    const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+    mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "default", securityLevel: "strict" });
+    let n = 0;
+    for (const el of targets) {
+      const text = src(el.dataset.src);
+      if (!text) { el.innerHTML = '<p class="empty">No diagram.</p>'; continue; }
+      try {
+        const { svg } = await mermaid.render(`d${n++}`, text);
+        el.innerHTML = svg;
+      } catch (e) {
+        fallback(el, text, e?.message?.split("\n")[0] || "syntax error");
+      }
+    }
+  } catch {
+    // CDN unreachable: the source fallback is already in place.
+  }
+</script>
+</body>
+</html>
