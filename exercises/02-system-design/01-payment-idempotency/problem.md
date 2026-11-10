@@ -41,7 +41,7 @@ Before proposing any components or database choices, your design must satisfy th
 
 You must define and defend:
 1. **Idempotency Key Protocol & Schema**: How the client generates keys, payload fingerprinting (hashing), collision mitigation, and state machine transitions (`PENDING`, `PROCESSING`, `SUCCESS`, `FAILED`).
-2. **Distributed Storage & Caching Layer**: Where idempotency keys are stored and locked. Evaluate Redis (Redlock vs single instance vs cluster) vs. DynamoDB/Cassandra conditional writes vs. relational DB (Postgres `ON CONFLICT DO NOTHING`).
+2. **Distributed Storage & Locking Layer**: Where idempotency keys are stored and locked. Evaluate the trade-offs of in-memory distributed caches vs. distributed NoSQL stores vs. relational engines under high write concurrency.
 3. **Downstream Gateway Timeout Handling**: How the engine differentiates between "gateway failed to receive request" vs. "gateway received request, executed payment, but response timed out".
 4. **Failure Recovery & Edge Cases**:
    - Cache crash / node failure during transaction processing.
