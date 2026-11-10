@@ -45,5 +45,3 @@ yarn-error.log*
 *.swp
 *.swo
 
-# Claude junction (links to .agents/skills)
-.claude/
