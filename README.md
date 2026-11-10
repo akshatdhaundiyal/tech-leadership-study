@@ -38,6 +38,10 @@ The agent assistant embedded in this repo follows the **Socratic Adversarial Met
 2. **Sequential Milestones**: Complex challenges are broken into progressive steps. Each milestone must be justified before advancing to the next.
 3. **Socratic Guidance**: If you encounter roadblocks, the assistant provides targeted hints, boundary conditions, and trade-off comparisons rather than answers.
 
+### The Honor System
+
+This repo cannot enforce its own rules. Any chat UI will hand you a full answer if you ask, and `.rubrics/` is a plain file you can open. The method only works if you do the thinking first: write your attempt in `submission.template.md`, and open a rubric or ask for a solution only after you have submitted. Peeking costs you the learning, not the repo.
+
 ---
 
 ## Overarching Business & Technical Lenses
@@ -119,7 +123,7 @@ Every proposal across all five tracks is evaluated through four foundational len
 tech-leadership-study/
 ├── .agents/
 │   └── skills/                   # Curated technical leadership & review skills
-├── .rubrics/                     # Hidden grading rubrics (gitignored, local-only)
+├── .rubrics/                     # Grading rubrics (tracked; opening one before you submit defeats the exercise)
 ├── exercises/
 │   ├── 01-product-management/    # Strategy briefs, PRDs, and prioritization exercises
 │   ├── 02-system-design/         # High-level architecture, scale math, and NFR exercises
