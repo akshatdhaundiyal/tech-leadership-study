@@ -119,7 +119,7 @@ Every proposal across all five tracks is evaluated through four foundational len
 tech-leadership-study/
 ├── .agents/
 │   └── skills/                   # Curated technical leadership & review skills
-├── .rubrics/                     # Hidden adversarial grading rubrics (evaluated at review time)
+├── .rubrics/                     # Hidden grading rubrics (gitignored, local-only)
 ├── exercises/
 │   ├── 01-product-management/    # Strategy briefs, PRDs, and prioritization exercises
 │   ├── 02-system-design/         # High-level architecture, scale math, and NFR exercises
@@ -128,7 +128,7 @@ tech-leadership-study/
 │   └── 05-generative-ai/         # RAG architectures, LLM evals, and prompt systems
 ├── notes/                        # Reference notes, cheat sheets, and architectural templates
 ├── AGENTS.md                     # Core curriculum contract & mentorship behavioral engine
-├── CLAUDE.md                     # Project instruction entrypoint (references AGENTS.md)
+├── CLAUDE.md                     # Project instruction entrypoint (imports AGENTS.md)
 ├── LICENSE                       # MIT License
 ├── PROGRESS.md                   # Milestone tracker with dates and uncovered blind spots
 ├── README.md                     # Workspace guide and track overview

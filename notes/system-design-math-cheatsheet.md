@@ -31,14 +31,15 @@ A quick-reference guide for back-of-the-envelope calculations in distributed sys
 
 ---
 
-## 3. Storage Sizing Formulas
+## 3. Storage Sizing Checklist
 
-$$\text{Daily Storage} = \text{Avg QPS} \times 86,400 \times \text{Average Payload Size}$$
+Derive the formulas yourself; this list only prompts what to account for:
 
-$$\text{Replicated Hot RAM} = \text{Peak QPS} \times \text{TTL (seconds)} \times \text{Record Size} \times \text{Memory Overhead (1.3 to 1.5)} \times \text{Replication Factor}$$
-
-- **Memory Overhead**: Redis, Memcached, and JVM hash maps carry 30–50% overhead for dictionary pointers, allocators (jemalloc), and internal indexing metadata.
-- **Cold Storage Replication**: Cloud object stores (S3/GCS) replicate across 3 AZs automatically. If building custom NVMe clusters, factor in replication factor $\ge 3$.
+- Which QPS (average or peak) applies to each tier, and over what time window?
+- What is stored per record, beyond the payload itself?
+- What does the datastore add on top of raw bytes (indexes, allocator and metadata overhead)?
+- How many copies exist, and where (replicas, AZs, regions)?
+- Which tier is RAM, which is SSD, which is object storage, and what does each cost per GB-month?
 
 ---
 

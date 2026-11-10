@@ -48,3 +48,6 @@ yarn-error.log*
 
 # Claude junction or local configs
 .claude/
+
+# Hidden grading rubrics (local only, never committed)
+.rubrics/
