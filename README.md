@@ -40,7 +40,7 @@ The agent assistant embedded in this repo follows the **Socratic Adversarial Met
 
 ### The Honor System
 
-This repo cannot enforce its own rules. Any chat UI will hand you a full answer if you ask, and `.rubrics/` is a plain file you can open. The method only works if you do the thinking first: write your attempt in `submission.template.md`, and open a rubric or ask for a solution only after you have submitted. Peeking costs you the learning, not the repo.
+This repo cannot enforce its own rules. Any chat UI will hand you a full answer if you ask, and `.rubrics/` is a plain file you can open. The method only works if you do the thinking first: write your attempt in `submission.md`, and open a rubric or ask for a solution only after you have submitted. Peeking costs you the learning, not the repo.
 
 ---
 

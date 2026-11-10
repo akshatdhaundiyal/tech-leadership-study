@@ -8,7 +8,7 @@ argument-hint: '<track-id> [custom-topic-or-company]'
 
 This skill creates mathematically grounded, business-aligned technical leadership exercises. It produces three synchronized artifacts:
 1. `exercises/<track>/<slug>/problem.md` (Public problem statement)
-2. `exercises/<track>/<slug>/submission.template.md` (Candidate workspace)
+2. `exercises/<track>/<slug>/submission.md` (Direct candidate workspace ready for solution input)
 3. `.rubrics/<track>/<slug>.md` (Hidden adversarial evaluation rubric)
 It then registers the new exercise into `PROGRESS.md`.
 
@@ -101,11 +101,11 @@ Must follow this exact structure:
 - `## 3. The Core Architectural / Product Decisions` (Key decisions to defend, without answers)
 - `## 4. Deliverables & Milestones` (List of sequential milestones)
 
-### File 2: `exercises/<track>/<slug>/submission.template.md`
-Must provide a structured workspace for the user:
+### File 2: `exercises/<track>/<slug>/submission.md`
+Must provide a ready-to-edit workspace for the user:
 - `# Candidate Submission: <Exercise Title>`
 - `# Candidate Name: <Name>`
-- Template sections corresponding exactly to each milestone with guiding questions and empty code/markdown blocks.
+- Template sections corresponding exactly to each milestone with guiding questions and empty workspace blocks ready for the candidate's solution.
 
 ### File 3: `.rubrics/<track>/<slug>.md`
 The hidden adversarial evaluation rubric:
@@ -130,7 +130,7 @@ When invoked:
 3. Create target directory `exercises/<track>/<slug>/`.
 4. Create directory `.rubrics/<track>/`.
 5. Write `problem.md`.
-6. Write `submission.template.md`.
+6. Write `submission.md` (ready for candidate solution).
 7. Write `.rubrics/<track>/<slug>.md`.
 8. Update `PROGRESS.md`.
 9. Notify user with the exercise summary, key tensions, and instructions to begin Milestone 1.

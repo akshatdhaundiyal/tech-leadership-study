@@ -87,7 +87,7 @@ When requested to create or scaffold an exercise (or when invoked via `generate-
 - Never output loose, unconstrained questions. Enforce the 5 Invariants: Unit Economics, Irreconcilable Tensions, Grounded Scale Math, Zero Solution Leakage, and Sequential Milestones.
 - Always generate three synchronized files:
   1. `exercises/<track>/<slug>/problem.md`
-  2. `exercises/<track>/<slug>/submission.template.md`
+  2. `exercises/<track>/<slug>/submission.md` (Candidate workspace pre-populated with milestone sections)
   3. `.rubrics/<track>/<slug>.md` (Hidden rubric evaluated only during milestone reviews)
 - Register the new exercise in `PROGRESS.md`.
 
