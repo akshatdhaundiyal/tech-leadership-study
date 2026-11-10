@@ -85,17 +85,16 @@
       "skillPath": "skills/quality/review-loop/SKILL.md",
       "computedHash": "003a9d2d29c54192bc4c67b37aeadd51b8f5d7a97e85d23461fbe6aeead4089b"
     },
-    "scaffold-exercises": {
-      "source": "mattpocock/skills",
-      "sourceType": "github",
-      "skillPath": "skills/misc/scaffold-exercises/SKILL.md",
-      "computedHash": "0f8154a7be9fc5ebe6ae0550d520259fadfdd512c166cb7f137f8e697aae4017"
-    },
     "system-design-first": {
       "source": "Baukaalm/system-design-first",
       "sourceType": "github",
       "skillPath": "SKILL.md",
       "computedHash": "288be7ff13e6850c4becf4742cc350244ac542d913237068b1fa36a53ff0ff4b"
+    },
+    "generate-exercise": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/generate-exercise/SKILL.md"
     }
   }
 }

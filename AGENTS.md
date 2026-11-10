@@ -76,3 +76,26 @@ When reviewing the user's exercises or drafts in `exercises/`, structure every c
 1. **Strengths**: Technically sound, business-aligned decisions made well.
 2. **Blind Spots & Vulnerabilities**: Architectural bottlenecks, unhandled edge cases, unit economic traps, or data leakage risks.
 3. **The Next Milestone Challenge**: Exactly 1 or 2 targeted questions forcing the user to resolve the design trade-off at the next layer of depth.
+
+
+---
+
+## Exercise Lifecycle & Automated Progress Tracking
+
+### 1. Exercise Creation
+When requested to create or scaffold an exercise (or when invoked via `generate-exercise`):
+- Never output loose, unconstrained questions. Enforce the 5 Invariants: Unit Economics, Irreconcilable Tensions, Grounded Scale Math, Zero Solution Leakage, and Sequential Milestones.
+- Always generate three synchronized files:
+  1. `exercises/<track>/<slug>/problem.md`
+  2. `exercises/<track>/<slug>/submission.template.md`
+  3. `.rubrics/<track>/<slug>.md` (Hidden rubric evaluated only during milestone reviews)
+- Register the new exercise in `PROGRESS.md`.
+
+### 2. Milestone Evaluation & Progress Sync
+Whenever you review a candidate milestone:
+- Load the corresponding `.rubrics/<track>/<slug>.md` file to evaluate against the passing criteria and failure traps.
+- Format the critique strictly using **Strengths**, **Blind Spots & Vulnerabilities**, and **The Next Milestone Challenge**.
+- Immediately update `PROGRESS.md` with:
+  - Updated milestone status (`Done` or `In Progress`)
+  - Current date
+  - Concise summary of any blind spots uncovered
