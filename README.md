@@ -132,7 +132,29 @@ tech-leadership-study/
 ├── LICENSE                       # MIT License
 ├── PROGRESS.md                   # Milestone tracker with dates and uncovered blind spots
 ├── README.md                     # Workspace guide and track overview
+├── pyproject.toml                # uv project definition (DuckDB, SciPy, LanceDB, Pydantic)
+├── uv.lock                       # Deterministic uv dependency lockfile
 └── skills-lock.json              # Agent skill dependency lockfile
+```
+
+---
+
+## Hands-On Sandbox & Empirical Prototyping (`uv`)
+
+While 80% of leadership exercises focus on strategic reasoning and architectural documentation in Markdown, 20% benefit from quick empirical verification. The workspace is configured with [`uv`](https://docs.astral.sh/uv/) and zero-server embedded tooling:
+
+- **DuckDB**: Fast in-process analytical SQL for Track 3 (sample ratio mismatch, CUPED simulations).
+- **SciPy & NumPy**: Statistical power, distribution shifts, and KS-test/PSI drift calculations for Tracks 3 & 4.
+- **LanceDB**: Serverless embedded vector database for Track 5 RAG and hybrid search benchmarks.
+- **Pydantic**: Contract and schema definitions for Track 2 APIs.
+
+```bash
+# Sync local virtualenv
+uv sync
+
+# Run any empirical test or scratchpad script
+uv run python path/to/script.py
+```
 ```
 
 ---
