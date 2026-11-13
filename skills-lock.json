@@ -95,6 +95,11 @@
       "source": "local",
       "sourceType": "local",
       "skillPath": ".agents/skills/generate-exercise/SKILL.md"
+    },
+    "mlops-engineer": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/mlops-engineer/SKILL.md"
     }
   }
 }

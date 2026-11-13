@@ -19,6 +19,8 @@ A rigorous self-study training ground for aspiring **Technical Product Managers 
   - [4. Applied Machine Learning & Production MLOps](#track-4-applied-machine-learning--production-mlops)
   - [5. Generative AI, RAG & LLM Systems](#track-5-generative-ai-rag--llm-systems)
 - [Repository Structure](#repository-structure)
+- [Hands-On Sandbox & Empirical Prototyping (`uv`)](#hands-on-sandbox--empirical-prototyping-uv)
+- [Agent Skill Setup](#agent-skill-setup)
 - [Feedback & Critique Framework](#feedback--critique-framework)
 - [How to Engage with the Assistant](#how-to-engage-with-the-assistant)
 
@@ -159,7 +161,25 @@ uv sync
 # Run any empirical test or scratchpad script
 uv run python path/to/script.py
 ```
+
+---
+
+## Agent Skill Setup
+
+Skills live in `.agents/skills/`. Claude Code only discovers skills under `.claude/skills/`, and `.claude/` is gitignored, so each clone needs a one-time local link:
+
+```powershell
+# Windows (PowerShell)
+New-Item -ItemType Directory -Force .claude | Out-Null
+New-Item -ItemType Junction -Path .claude\skills -Target (Resolve-Path .agents\skills)
 ```
+
+```bash
+# macOS / Linux
+mkdir -p .claude && ln -s ../.agents/skills .claude/skills
+```
+
+Restart the session afterwards so `/generate-exercise` and the other skills are picked up.
 
 ---
 
@@ -179,8 +199,8 @@ All work in this repository is reviewed using a standardized 3-part critique:
    - *"Give me a System Design challenge in Track 2 focusing on an event-driven payment ledger."*
    - *"Set up an A/B testing scenario in Track 3 for evaluating a recommendation engine."*
    - *"Give me an MLOps design exercise in Track 4 for real-time fraud scoring."*
-2. **Submit a Document for Review**:
-   - Write your draft or design in `exercises/<track>/<exercise-name>.md`.
-   - Ask: *"Review my draft against the Track standards and challenge my assumptions."*
+2. **Submit a Milestone for Review**:
+   - Write your attempt in the matching milestone section of `exercises/<track>/<slug>/submission.md`.
+   - Ask: *"Review my Milestone 1 for `01-payment-idempotency`."* The assistant grades it against `.rubrics/<track>/<slug>.md` and updates `PROGRESS.md`.
 3. **Run Through Architectural Deep Dives**:
    - Step through the scale math, API schemas, failover strategies, and cost estimates milestone by milestone.
